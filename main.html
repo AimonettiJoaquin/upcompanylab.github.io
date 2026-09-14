@@ -1,0 +1,930 @@
+<title>Lab de Conversaciones Difíciles</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Sofia+Sans:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg:#1C1F2A;
+    --bg-raised:#242A3A;
+    --bg-inset:#161923;
+    --fg:#FFFFFF;
+    --fg-muted:#A7AFC4;
+    --fg-faint:#6E778F;
+    --accent:#00B9B6;
+    --accent-2:#FF9600;
+    --border:rgba(255,255,255,0.10);
+    --border-strong:rgba(255,255,255,0.18);
+    --focus:#00B9B6;
+  }
+
+  *{box-sizing:border-box;}
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+  }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--fg);
+    font-family:'Sofia Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Poppins', 'Sofia Sans', sans-serif;
+    font-weight:700;
+    text-wrap:balance;
+    margin:0;
+  }
+  p{ margin:0; }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent); color:#06201f; }
+
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:28px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .brand{
+    font-family:'Poppins', sans-serif;
+    font-weight:800;
+    font-size:19px;
+    letter-spacing:0.02em;
+    color:var(--fg);
+    text-decoration:none;
+  }
+  .brand:hover{ color:var(--fg); }
+  .brand span{ color:var(--accent); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    padding:88px 0 72px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    top:-220px; right:-160px;
+    width:560px; height:560px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, rgba(0,185,182,0.30), rgba(0,185,182,0) 70%);
+    pointer-events:none;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    bottom:-260px; left:-200px;
+    width:480px; height:480px;
+    border-radius:50%;
+    background:radial-gradient(circle at 60% 40%, rgba(255,150,0,0.14), rgba(255,150,0,0) 70%);
+    pointer-events:none;
+  }
+  .hero-inner{ position:relative; max-width:760px; }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:0.11em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:22px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--accent);
+    display:inline-block;
+  }
+  .headline{
+    font-size:clamp(30px, 4vw, 46px);
+    line-height:1.18;
+    letter-spacing:-0.01em;
+  }
+  .headline em{
+    font-style:normal;
+    color:var(--accent);
+  }
+  .sub-headline{
+    margin-top:20px;
+    font-size:16px;
+    line-height:1.6;
+    color:var(--fg-faint);
+    max-width:520px;
+    font-style:italic;
+  }
+  .lede{
+    margin-top:22px;
+    font-size:18px;
+    line-height:1.6;
+    color:var(--fg-muted);
+    max-width:560px;
+  }
+  .hero-cta{
+    margin-top:36px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    appearance:none;
+    border:none;
+    cursor:pointer;
+    font-family:'Sofia Sans', sans-serif;
+    font-weight:700;
+    font-size:15.5px;
+    padding:15px 30px;
+    border-radius:8px;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; }
+  .btn-primary{
+    background:var(--accent-2);
+    color:#1C1200;
+    box-shadow:0 8px 24px -8px rgba(255,150,0,0.55);
+  }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 12px 28px -8px rgba(255,150,0,0.6); }
+  .hero-note{
+    font-size:13.5px;
+    color:var(--fg-faint);
+  }
+
+  /* ---------- section shell ---------- */
+  section{ padding:64px 0; }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    margin-bottom:34px;
+  }
+  .kicker{
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:0.10em;
+    text-transform:uppercase;
+    color:var(--fg-faint);
+    white-space:nowrap;
+  }
+  .rule{
+    flex:1;
+    height:1px;
+    background:var(--border);
+  }
+  .section-title{
+    font-size:26px;
+    margin-bottom:0;
+  }
+
+  /* ---------- explora el lab: tabs + carrusel ---------- */
+  .explore-tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:28px;
+    flex-wrap:wrap;
+  }
+  .explore-tab{
+    appearance:none;
+    border:1px solid var(--border-strong);
+    background:transparent;
+    color:var(--fg-muted);
+    font-family:'Sofia Sans', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:11px 20px;
+    border-radius:100px;
+    cursor:pointer;
+    transition:background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .explore-tab:hover{ color:var(--fg); border-color:var(--accent); }
+  .explore-tab.active{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#052221;
+  }
+  .explore-tab:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  .carousel-shell{
+    position:relative;
+    display:flex;
+    align-items:stretch;
+    gap:14px;
+  }
+  .carousel-track{
+    flex:1;
+    display:flex;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+    border-radius:18px;
+    border:1px solid var(--border);
+    background:var(--bg-raised);
+    scrollbar-width:none;
+  }
+  .carousel-track::-webkit-scrollbar{ display:none; }
+  .slide{
+    flex:0 0 100%;
+    scroll-snap-align:start;
+    padding:44px 48px;
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:28px;
+    align-items:start;
+  }
+  .slide-mark{
+    flex:none;
+    width:56px; height:56px;
+    border-radius:16px;
+    background:rgba(0,185,182,0.12);
+    border:1px solid rgba(0,185,182,0.35);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .slide-mark svg{ width:26px; height:26px; }
+  .slide h3{
+    font-size:22px;
+    margin-bottom:14px;
+  }
+  .slide .pullquote{
+    font-family:'Poppins', sans-serif;
+    font-weight:600;
+    font-size:20px;
+    line-height:1.44;
+    letter-spacing:-0.005em;
+    color:var(--fg);
+    margin-bottom:14px;
+  }
+  .slide p{
+    font-size:15.5px;
+    line-height:1.6;
+    color:var(--fg-muted);
+    max-width:560px;
+  }
+  .slide .who-list, .slide .take-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .slide .who-list p, .slide .take-list p{ position:relative; padding-left:22px; }
+  .slide .who-list p::before, .slide .take-list p::before{
+    content:"";
+    position:absolute; left:0; top:8px;
+    width:9px; height:9px;
+    border-radius:50%;
+    background:var(--accent);
+  }
+  .slide .who-list strong, .slide .take-list strong{ color:var(--fg); font-weight:600; }
+
+  .car-arrow{
+    flex:none;
+    align-self:center;
+    width:44px; height:44px;
+    border-radius:50%;
+    border:1px solid var(--border-strong);
+    background:var(--bg);
+    color:var(--fg);
+    font-size:19px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .car-arrow:hover{ border-color:var(--accent); color:var(--accent); }
+  .car-arrow:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  .dots{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-top:22px;
+  }
+  .dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--border-strong);
+    cursor:pointer;
+    border:none;
+    padding:0;
+    transition:background .15s ease, transform .15s ease;
+  }
+  .dot.active{ background:var(--accent); transform:scale(1.3); }
+
+  /* ---------- formato strip ---------- */
+  .spec-strip{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+  }
+  .spec{
+    background:var(--bg-raised);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:26px 22px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    transition:border-color .18s ease, transform .18s ease;
+  }
+  .spec:hover{ border-color:var(--border-strong); transform:translateY(-2px); }
+  .spec-mark{
+    width:38px; height:38px;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .spec-mark svg{ width:18px; height:18px; }
+  .spec:nth-child(odd) .spec-mark{
+    background:rgba(0,185,182,0.12);
+    border:1px solid rgba(0,185,182,0.35);
+  }
+  .spec:nth-child(even) .spec-mark{
+    background:rgba(255,150,0,0.12);
+    border:1px solid rgba(255,150,0,0.35);
+  }
+  .spec-label{
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    color:var(--fg-faint);
+    margin-bottom:6px;
+  }
+  .spec-value{
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size:17px;
+    line-height:1.3;
+    font-variant-numeric:tabular-nums;
+  }
+  .spec-desc{
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--fg-muted);
+    margin-top:2px;
+  }
+  .spec-footnote{
+    margin-top:18px;
+    font-size:13px;
+    color:var(--fg-faint);
+  }
+
+  /* ---------- form ---------- */
+  .capture{
+    padding:72px 0 96px;
+  }
+  .capture-shell{
+    background:var(--bg-inset);
+    border:1px solid var(--border-strong);
+    border-radius:20px;
+    padding:52px;
+    display:grid;
+    grid-template-columns:0.9fr 1.1fr;
+    gap:52px;
+    align-items:center;
+  }
+  .capture-copy .section-title{ margin-bottom:14px; }
+  .capture-copy p{
+    color:var(--fg-muted);
+    font-size:15.5px;
+    line-height:1.6;
+    max-width:400px;
+  }
+  .slogan{
+    margin-top:28px;
+    font-family:'Poppins', sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    color:var(--accent);
+  }
+  form{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .field label{
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--fg-muted);
+  }
+  .field input{
+    background:var(--bg);
+    border:1px solid var(--border-strong);
+    border-radius:9px;
+    padding:13px 15px;
+    color:var(--fg);
+    font-family:'Sofia Sans', sans-serif;
+    font-size:15px;
+    transition:border-color .15s ease;
+  }
+  .field input::placeholder{ color:var(--fg-faint); }
+  .field input:focus-visible{
+    outline:2px solid var(--focus);
+    outline-offset:1px;
+  }
+  .field-error{
+    font-size:12.5px;
+    color:var(--accent-2);
+    min-height:1px;
+    display:none;
+  }
+  .field-hint{
+    font-size:12.5px;
+    color:var(--fg-faint);
+    min-height:1px;
+  }
+  .field.invalid input{ border-color:var(--accent-2); }
+  .field.invalid .field-error{ display:block; }
+  .field.invalid .field-hint{ display:none; }
+  .field.valid input{ border-color:#33CB66; }
+
+  .submit-row{
+    margin-top:6px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+  .btn-submit{
+    background:var(--accent);
+    color:#052221;
+    width:100%;
+  }
+  .btn-submit:hover{ transform:translateY(-1px); box-shadow:0 12px 26px -10px rgba(0,185,182,0.55); }
+  .privacy-note{
+    font-size:12px;
+    color:var(--fg-faint);
+    line-height:1.5;
+  }
+
+  .success{
+    display:none;
+    flex-direction:column;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .success.show{ display:flex; }
+  form.hide{ display:none; }
+  .success-mark{
+    width:40px; height:40px;
+    border-radius:50%;
+    background:rgba(51,203,102,0.14);
+    border:1px solid #33CB66;
+    color:#33CB66;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+    font-weight:700;
+  }
+  .success h3{ font-size:19px; }
+  .success p{ color:var(--fg-muted); font-size:14.5px; line-height:1.55; max-width:340px; }
+
+  /* ---------- scroll reveal ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
+  /* ---------- floating cta ---------- */
+  .floating-cta{
+    position:fixed;
+    left:50%; bottom:24px;
+    transform:translate(-50%, 16px);
+    opacity:0;
+    pointer-events:none;
+    z-index:40;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    background:var(--bg-inset);
+    border:1px solid var(--border-strong);
+    border-radius:100px;
+    padding:9px 9px 9px 24px;
+    box-shadow:0 16px 36px -14px rgba(0,0,0,0.55);
+    transition:opacity .3s ease, transform .3s ease;
+  }
+  .floating-cta.show{
+    opacity:1;
+    pointer-events:auto;
+    transform:translate(-50%, 0);
+  }
+  .floating-cta span{
+    font-size:14px;
+    font-weight:600;
+    color:var(--fg-muted);
+    white-space:nowrap;
+  }
+  .floating-cta .btn{
+    padding:11px 22px;
+    font-size:14px;
+    white-space:nowrap;
+  }
+
+  footer{
+    border-top:1px solid var(--border);
+    padding:30px 0 44px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:var(--fg-faint);
+    font-size:13px;
+  }
+
+  @media (max-width: 860px){
+    .wrap{ padding:0 20px; }
+    .spec-strip{ grid-template-columns:repeat(2, 1fr); }
+    .capture-shell{ grid-template-columns:1fr; padding:32px; }
+    .slide{ grid-template-columns:1fr; padding:32px 24px; }
+    .car-arrow{ display:none; }
+    .explore-tabs{ gap:6px; }
+    .explore-tab{ padding:9px 15px; font-size:13px; }
+    .floating-cta{
+      left:16px; right:16px; bottom:16px;
+      transform:translateY(16px);
+      width:auto;
+      border-radius:16px;
+      justify-content:space-between;
+      padding:14px 14px 14px 18px;
+    }
+    .floating-cta.show{ transform:translateY(0); }
+    .floating-cta span{ display:none; }
+    .floating-cta .btn{ width:100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .btn{ transition:none; }
+    .carousel-track{ scroll-behavior:auto; }
+    .reveal{ opacity:1; transform:none; transition:none; }
+    .floating-cta{ transition:opacity .01s linear; }
+  }
+</style>
+
+<div class="wrap topbar">
+  <a class="brand" href="https://upcompany.com.ar/" target="_blank" rel="noopener">UP <span>Company</span></a>
+</div>
+
+<div class="hero">
+  <div class="wrap hero-inner">
+    <div class="eyebrow">Lab de práctica · Para líderes</div>
+    <h1 class="headline">Lab de UP — <em>somos el puente hacia la nueva forma de trabajar.</em></h1>
+    <p class="sub-headline">"Hay conversaciones que todos sabemos que tenemos que tener. Y que igual postergamos."</p>
+    <p class="lede">El Lab de Conversaciones Difíciles para Líderes es un espacio de práctica intensiva para dejar de postergarlas — y aprender a tenerlas bien.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" onclick="goToForm()">Quiero más información</button>
+      <span class="hero-note">Medio día · Grupos de hasta 12 personas</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="reveal">
+    <div class="section-head">
+      <span class="kicker">Conocé el Lab</span>
+      <span class="rule"></span>
+    </div>
+
+    <div class="explore-tabs" role="tablist" aria-label="Conocé el Lab">
+      <button class="explore-tab active" data-idx="0" role="tab" aria-selected="true">Qué es un Lab</button>
+      <button class="explore-tab" data-idx="1" role="tab" aria-selected="false">Para quién es</button>
+      <button class="explore-tab" data-idx="2" role="tab" aria-selected="false">Qué se llevan</button>
+    </div>
+
+    <div class="carousel-shell">
+      <button class="car-arrow car-prev" aria-label="Anterior">‹</button>
+
+      <div class="carousel-track" id="car-track">
+        <div class="slide" data-idx="0">
+          <div class="slide-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00B9B6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 5h16v11H8l-4 4V5z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="pullquote">Un Lab no es un workshop, no es una clase, no es una conferencia.</p>
+            <p><strong style="color:var(--fg)">Es práctica pura</strong>, con casos reales y acompañamiento experto. Se ensaya en un ambiente seguro, con herramientas concretas y feedback inmediato — no se escucha una charla sobre cómo comunicarse mejor, se practica lo que pesa: decirle a alguien que su rendimiento no está a la altura, poner un límite que se postergó demasiado, dar el feedback que puede doler.</p>
+          </div>
+        </div>
+
+        <div class="slide" data-idx="1">
+          <div class="slide-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00B9B6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="8" r="3"/><path d="M2.5 19c.7-3.2 3.2-5 6.5-5s5.8 1.8 6.5 5"/><circle cx="17.5" cy="8.5" r="2.3"/><path d="M15.8 13.2c2.5.2 4.4 1.9 5 4.6"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Líderes, mandos medios y coordinadores</h3>
+            <div class="who-list">
+              <p>Evitan conversaciones incómodas porque no saben cómo encararlas.</p>
+              <p>Las tienen, pero <strong>quedan dando vueltas</strong> preguntándose si lo hicieron bien.</p>
+              <p>Quieren comunicarse con más claridad <strong>sin perder el vínculo</strong> con su equipo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide" data-idx="2">
+          <div class="slide-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00B9B6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6 9 17l-5-5"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Lo que se llevan</h3>
+            <div class="take-list">
+              <p><strong>Herramientas concretas</strong> para preparar y conducir conversaciones difíciles.</p>
+              <p><strong>Práctica real</strong>, con feedback inmediato sobre casos propios.</p>
+              <p><strong>Un mapa personal</strong> de las conversaciones pendientes y cómo encararlas.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="car-arrow car-next" aria-label="Siguiente">›</button>
+    </div>
+
+    <div class="dots">
+      <button class="dot active" data-idx="0" aria-label="Ir a slide 1"></button>
+      <button class="dot" data-idx="1" aria-label="Ir a slide 2"></button>
+      <button class="dot" data-idx="2" aria-label="Ir a slide 3"></button>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="section-head">
+      <span class="kicker">Formato</span>
+      <span class="rule"></span>
+    </div>
+    <div class="spec-strip">
+      <div class="spec">
+        <div class="spec-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00B9B6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>
+          </svg>
+        </div>
+        <div>
+          <div class="spec-label">Duración</div>
+          <div class="spec-value">Medio día</div>
+        </div>
+        <p class="spec-desc">Un solo encuentro, intensivo.</p>
+      </div>
+      <div class="spec">
+        <div class="spec-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FF9600" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8.5" cy="8" r="2.8"/><path d="M2.5 18.5c.6-3 2.9-4.6 6-4.6s5.4 1.6 6 4.6"/><circle cx="17" cy="8.6" r="2.1"/><path d="M15.5 13.6c2.2.2 3.9 1.7 4.4 4.1"/>
+          </svg>
+        </div>
+        <div>
+          <div class="spec-label">Grupo</div>
+          <div class="spec-value">Hasta 12 personas</div>
+        </div>
+        <p class="spec-desc">Reducido, para práctica real.</p>
+      </div>
+      <div class="spec">
+        <div class="spec-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00B9B6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="spec-label">Modalidad</div>
+          <div class="spec-value">Presencial o virtual</div>
+        </div>
+        <p class="spec-desc">Se define según el cliente.</p>
+      </div>
+      <div class="spec">
+        <div class="spec-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FF9600" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5 12 5l9 4.5-9 4.5-9-4.5z"/><path d="M7 11.5v4c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5v-4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="spec-label">Facilitación</div>
+          <div class="spec-value">Especialistas UP</div>
+        </div>
+        <p class="spec-desc">Acompañamiento experto en vivo.</p>
+      </div>
+    </div>
+    <p class="spec-footnote">Con base en Córdoba, Argentina — la modalidad presencial es en nuestras instalaciones, o lo hacemos virtual según te convenga.</p>
+  </section>
+
+</div>
+
+<div class="wrap">
+  <section class="capture reveal" id="capture">
+    <div class="capture-shell">
+      <div class="capture-copy">
+        <h2 class="section-title">Llevá el Lab a tu empresa</h2>
+        <p>Dejanos tus datos y alguien de UP se contacta para contarte cómo lo armamos con tu equipo.</p>
+        <div class="slogan">Somos el puente hacia la nueva forma de trabajar.</div>
+      </div>
+
+      <div>
+        <form id="lead-form" novalidate>
+          <div class="field" id="field-nombre">
+            <label for="form-nombre">Nombre completo</label>
+            <input id="form-nombre" name="nombre" type="text" placeholder="Nombre y apellido" autocomplete="name">
+            <span class="field-hint">&nbsp;</span>
+            <span class="field-error">Contanos tu nombre completo.</span>
+          </div>
+          <div class="field" id="field-empresa">
+            <label for="form-empresa">Empresa</label>
+            <input id="form-empresa" name="empresa" type="text" placeholder="Nombre de la empresa" autocomplete="organization">
+            <span class="field-hint">&nbsp;</span>
+            <span class="field-error">Indicanos tu empresa.</span>
+          </div>
+          <div class="field" id="field-mail">
+            <label for="form-mail">Mail corporativo</label>
+            <input id="form-mail" name="mail" type="email" placeholder="nombre@empresa.com" autocomplete="email">
+            <span class="field-hint">&nbsp;</span>
+            <span class="field-error">Ingresá un mail corporativo válido.</span>
+          </div>
+          <div class="submit-row">
+            <button type="submit" class="btn btn-submit">Quiero más información</button>
+          </div>
+          <p class="privacy-note">Tus datos se usan solo para que UP Company te contacte por este Lab.</p>
+        </form>
+
+        <div class="success" id="success">
+          <div class="success-mark">✓</div>
+          <h3>Listo, ya lo recibimos.</h3>
+          <p>Alguien de UP se va a contactar a tu mail corporativo con los próximos pasos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="floating-cta" id="floating-cta">
+  <span>¿Querés más info del Lab?</span>
+  <button class="btn btn-primary" onclick="goToForm()">Quiero más información</button>
+</div>
+
+<div class="wrap">
+  <footer>
+    <span>UP Company — Consultora de formación y liderazgo</span>
+    <span>Córdoba, Argentina</span>
+  </footer>
+</div>
+
+<script>
+  (function(){
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => revealObserver.observe(el));
+  })();
+
+  (function(){
+    const floatingCta = document.getElementById('floating-cta');
+    const heroEl = document.querySelector('.hero');
+    const captureEl = document.getElementById('capture');
+    let heroVisible = true;
+    let captureVisible = false;
+
+    function sync(){
+      floatingCta.classList.toggle('show', !heroVisible && !captureVisible);
+    }
+
+    new IntersectionObserver(([entry]) => {
+      heroVisible = entry.isIntersecting;
+      sync();
+    }, { threshold: 0 }).observe(heroEl);
+
+    new IntersectionObserver(([entry]) => {
+      captureVisible = entry.isIntersecting;
+      sync();
+    }, { threshold: 0.15 }).observe(captureEl);
+  })();
+
+  function goToForm(){
+    const target = document.getElementById('capture');
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(function(){
+      document.getElementById('form-nombre').focus({ preventScroll: true });
+    }, 500);
+  }
+
+  (function(){
+    const track = document.getElementById('car-track');
+    const slides = Array.from(track.querySelectorAll('.slide'));
+    const tabs = Array.from(document.querySelectorAll('.explore-tab'));
+    const dots = Array.from(document.querySelectorAll('.dot'));
+    const prev = document.querySelector('.car-prev');
+    const next = document.querySelector('.car-next');
+    let current = 0;
+    let syncing = false;
+
+    function setActive(idx){
+      current = idx;
+      tabs.forEach(t => {
+        const on = Number(t.dataset.idx) === idx;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      dots.forEach(d => d.classList.toggle('active', Number(d.dataset.idx) === idx));
+    }
+
+    function goTo(idx){
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      syncing = true;
+      track.scrollTo({ left: slides[idx].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+      setActive(idx);
+      setTimeout(() => { syncing = false; }, 400);
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => goTo(Number(t.dataset.idx))));
+    dots.forEach(d => d.addEventListener('click', () => goTo(Number(d.dataset.idx))));
+    prev.addEventListener('click', () => goTo(current - 1));
+    next.addEventListener('click', () => goTo(current + 1));
+
+    track.addEventListener('scroll', () => {
+      if(syncing) return;
+      const pos = track.scrollLeft + track.offsetWidth / 2;
+      let closest = 0, dist = Infinity;
+      slides.forEach((s, i) => {
+        const center = s.offsetLeft - track.offsetLeft + s.offsetWidth / 2;
+        const d = Math.abs(pos - center);
+        if(d < dist){ dist = d; closest = i; }
+      });
+      setActive(closest);
+    }, { passive: true });
+  })();
+
+  const form = document.getElementById('lead-form');
+  const success = document.getElementById('success');
+
+  const validators = {
+    nombre: v => v.trim().length >= 2,
+    empresa: v => v.trim().length >= 2,
+    mail: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+  };
+
+  const liveFields = [
+    { key: 'nombre', fieldId: 'field-nombre', inputId: 'form-nombre' },
+    { key: 'empresa', fieldId: 'field-empresa', inputId: 'form-empresa' },
+    { key: 'mail', fieldId: 'field-mail', inputId: 'form-mail' }
+  ];
+
+  liveFields.forEach(({ key, fieldId, inputId }) => {
+    const fieldEl = document.getElementById(fieldId);
+    const inputEl = document.getElementById(inputId);
+    let touched = false;
+
+    function check(){
+      const ok = validators[key](inputEl.value);
+      fieldEl.classList.toggle('invalid', touched && !ok);
+      fieldEl.classList.toggle('valid', touched && ok && inputEl.value.trim().length > 0);
+    }
+
+    inputEl.addEventListener('blur', () => { touched = true; check(); });
+    inputEl.addEventListener('input', () => { if(touched) check(); });
+  });
+
+  function setInvalid(fieldId, invalid){
+    const el = document.getElementById(fieldId);
+    el.classList.toggle('invalid', invalid);
+    el.classList.toggle('valid', !invalid);
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const nombre = document.getElementById('form-nombre').value.trim();
+    const empresa = document.getElementById('form-empresa').value.trim();
+    const mail = document.getElementById('form-mail').value.trim();
+    const mailOk = validators.mail(mail);
+
+    setInvalid('field-nombre', !validators.nombre(nombre));
+    setInvalid('field-empresa', !validators.empresa(empresa));
+    setInvalid('field-mail', !mailOk);
+
+    if(nombre.length < 2 || empresa.length < 2 || !mailOk) return;
+
+    form.classList.add('hide');
+    success.classList.add('show');
+  });
+</script>
